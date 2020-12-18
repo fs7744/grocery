@@ -42,73 +42,73 @@ namespace DistinctByTest
     {
         private IEnumerable<Data> repeatOnlyOne = Enumerable.Repeat(55, 100).Select(i => new Data() { D = i });
         private IEnumerable<Data> repeatTwo = Enumerable.Repeat(55, 10).Union(Enumerable.Repeat(88, 90)).Select(i => new Data() { D = i });
-        private IEnumerable<Data> range = Enumerable.Range(10, 10).Union(Enumerable.Range(10, 90)).Select(i => new Data() { D = i });
+        private IEnumerable<Data> range = Enumerable.Range(10, 10000).Union(Enumerable.Range(10, 9000)).Select(i => new Data() { D = i });
 
-        [Benchmark]
-        public void RepeatOnlyOne_Distinct()
-        {
-            repeatOnlyOne.Select(i => i.D).Distinct().ToList();
-        }
+        //[Benchmark]
+        //public void RepeatOnlyOne_Distinct()
+        //{
+        //    repeatOnlyOne.Select(i => i.D).Distinct().ToList();
+        //}
 
-        [Benchmark]
-        public void RepeatOnlyOne_DistinctBy()
-        {
-            repeatOnlyOne.DistinctBy(i => i.D).ToList();
-        }
+        //[Benchmark]
+        //public void RepeatOnlyOne_DistinctBy()
+        //{
+        //    repeatOnlyOne.DistinctBy(i => i.D).ToList();
+        //}
 
-        [Benchmark]
-        public void RepeatOnlyOne_DistinctByOnGroupBy()
-        {
-            repeatOnlyOne.DistinctByOnGroupBy(i => i.D).ToList();
-        }
+        //[Benchmark]
+        //public void RepeatOnlyOne_DistinctByOnGroupBy()
+        //{
+        //    repeatOnlyOne.DistinctByOnGroupBy(i => i.D).ToList();
+        //}
 
-        [Benchmark]
-        public void RepeatOnlyOne_DistinctByOnlyHashSet()
-        {
-            repeatOnlyOne.DistinctByOnlyHashSet(i => i.D).ToList();
-        }
+        //[Benchmark]
+        //public void RepeatOnlyOne_DistinctByOnlyHashSet()
+        //{
+        //    repeatOnlyOne.DistinctByOnlyHashSet(i => i.D).ToList();
+        //}
 
-        [Benchmark]
-        public void RepeatOnlyOne_DistinctByOnDistinctByEqualityComparer()
-        {
-            repeatOnlyOne.DistinctByOnDistinctByEqualityComparer(i => i.D).ToList();
-        }
+        //[Benchmark]
+        //public void RepeatOnlyOne_DistinctByOnDistinctByEqualityComparer()
+        //{
+        //    repeatOnlyOne.DistinctByOnDistinctByEqualityComparer(i => i.D).ToList();
+        //}
 
-        [Benchmark]
-        public void RepeatTwo_Distinct()
-        {
-            repeatTwo.Select(i => i.D).Distinct().ToList();
-        }
+        //[Benchmark]
+        //public void RepeatTwo_Distinct()
+        //{
+        //    repeatTwo.Select(i => i.D).Distinct().ToList();
+        //}
 
-        [Benchmark]
-        public void RepeatTwo_DistinctBy()
-        {
-            repeatTwo.DistinctBy(i => i.D).ToList();
-        }
+        //[Benchmark]
+        //public void RepeatTwo_DistinctBy()
+        //{
+        //    repeatTwo.DistinctBy(i => i.D).ToList();
+        //}
 
-        [Benchmark]
-        public void RepeatTwo_DistinctByOnGroupBy()
-        {
-            repeatTwo.DistinctByOnGroupBy(i => i.D).ToList();
-        }
+        //[Benchmark]
+        //public void RepeatTwo_DistinctByOnGroupBy()
+        //{
+        //    repeatTwo.DistinctByOnGroupBy(i => i.D).ToList();
+        //}
 
-        [Benchmark]
-        public void RepeatTwo_DistinctByOnlyHashSet()
-        {
-            repeatTwo.DistinctByOnlyHashSet(i => i.D).ToList();
-        }
+        //[Benchmark]
+        //public void RepeatTwo_DistinctByOnlyHashSet()
+        //{
+        //    repeatTwo.DistinctByOnlyHashSet(i => i.D).ToList();
+        //}
 
-        [Benchmark]
-        public void RepeatTwo_DistinctByOnDistinctByEqualityComparer()
-        {
-            repeatTwo.DistinctByOnDistinctByEqualityComparer(i => i.D).ToList();
-        }
+        //[Benchmark]
+        //public void RepeatTwo_DistinctByOnDistinctByEqualityComparer()
+        //{
+        //    repeatTwo.DistinctByOnDistinctByEqualityComparer(i => i.D).ToList();
+        //}
 
-        [Benchmark]
-        public void Range_Distinct()
-        {
-            range.Select(i => i.D).Distinct().ToList();
-        }
+        //[Benchmark]
+        //public void Range_Distinct()
+        //{
+        //    range.Select(i => i.D).Distinct().ToList();
+        //}
 
         [Benchmark]
         public void Range_DistinctBy()

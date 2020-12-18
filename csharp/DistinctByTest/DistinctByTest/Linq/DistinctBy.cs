@@ -100,7 +100,7 @@ namespace System.Linq
                         };
                         current = iterator.Current;
                         var currentDistinctBy = getDistinctBy(current);
-                        while (set.Contains(currentDistinctBy))
+                        while (!set.Add(currentDistinctBy))
                         {
                             if (!iterator.MoveNext())
                             {
@@ -110,7 +110,6 @@ namespace System.Linq
                             current = iterator.Current;
                             currentDistinctBy = getDistinctBy(current);
                         }
-                        set.Add(currentDistinctBy);
                         state = 3;
                         return true;
                     case 3:
@@ -121,7 +120,7 @@ namespace System.Linq
                         }
                         current = iterator.Current;
                         currentDistinctBy = getDistinctBy(current);
-                        while (set.Contains(currentDistinctBy))
+                        while (!set.Add(currentDistinctBy))
                         {
                             if (!iterator.MoveNext())
                             {
@@ -131,7 +130,6 @@ namespace System.Linq
                             current = iterator.Current;
                             currentDistinctBy = getDistinctBy(current);
                         }
-                        set.Add(currentDistinctBy);
                         return true;
 
                     default:
