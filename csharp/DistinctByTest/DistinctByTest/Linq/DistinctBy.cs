@@ -25,6 +25,7 @@ namespace System.Linq
             private readonly IEqualityComparer<TDistinctBy> comparer;
             private TDistinctBy first;
             private TSource current;
+            private HashSet<TDistinctBy> set;
             private IEnumerator<TSource> iterator;
 
             public DistinctByIterator(IEnumerable<TSource> source, Func<TSource, TDistinctBy> getDistinctBy, IEqualityComparer<TDistinctBy> comparer)
@@ -40,17 +41,18 @@ namespace System.Linq
 
             public void Dispose()
             {
-                state = 4;
+                state = 3;
                 first = default;
                 iterator = null;
                 current = default;
+                set = null;
             }
 
             public bool MoveNext()
             {
                 switch (state)
                 {
-                    case 1:
+                    case 0:
                         iterator = source.GetEnumerator();
                         if (!iterator.MoveNext())
                         {
@@ -58,10 +60,10 @@ namespace System.Linq
                             return false;
                         }
                         current = iterator.Current;
-                        state = 2;
+                        state = 1;
                         return true;
 
-                    case 2:
+                    case 1:
                         first = getDistinctBy(current);
                         var firstHashCode = first.GetHashCode();
                         if (!iterator.MoveNext())
@@ -70,26 +72,28 @@ namespace System.Linq
                             return false;
                         }
                         current = iterator.Current;
-                        while (firstHashCode == current.GetHashCode() && comparer.Equals(first, getDistinctBy(current)))
+                        var next = getDistinctBy(current);
+                        while (firstHashCode == next.GetHashCode() && comparer.Equals(first, next))
                         {
                             if (!iterator.MoveNext())
                             {
                                 Dispose();
                                 return false;
                             }
-                            current = iterator.Current;
+                            current = iterator.Current; 
+                            next = getDistinctBy(current);
                         }
-                        state = 3;
+                        state = 2;
                         return true;
 
-                    case 3:
+                    case 2:
                         var second = getDistinctBy(current);
                         if (!iterator.MoveNext())
                         {
                             Dispose();
                             return false;
                         }
-                        var set = new HashSet<TDistinctBy>(comparer)
+                        set = new HashSet<TDistinctBy>(comparer)
                         {
                             first,
                             second
@@ -106,6 +110,28 @@ namespace System.Linq
                             current = iterator.Current;
                             currentDistinctBy = getDistinctBy(current);
                         }
+                        set.Add(currentDistinctBy);
+                        state = 3;
+                        return true;
+                    case 3:
+                        if (!iterator.MoveNext())
+                        {
+                            Dispose();
+                            return false;
+                        }
+                        current = iterator.Current;
+                        currentDistinctBy = getDistinctBy(current);
+                        while (set.Contains(currentDistinctBy))
+                        {
+                            if (!iterator.MoveNext())
+                            {
+                                Dispose();
+                                return false;
+                            }
+                            current = iterator.Current;
+                            currentDistinctBy = getDistinctBy(current);
+                        }
+                        set.Add(currentDistinctBy);
                         return true;
 
                     default:
@@ -116,7 +142,7 @@ namespace System.Linq
             public void Reset()
             {
                 Dispose();
-                state = 1;
+                state = 0;
             }
 
             IEnumerator IEnumerable.GetEnumerator()
